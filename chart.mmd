@@ -1,0 +1,23 @@
+graph TD
+  CEO["CEO\n（總經理）"]
+
+  subgraph TW [台灣總部]
+    Sales["業務處"]
+    Prod["生產處"]
+    Dev["開發處"]
+    ProdMgmt["生產管理處"]
+    OpsMgmt["營運管理處"]
+  end
+
+  China["中國分公司"]
+  VN["越南分公司"]
+
+  CEO --> TW
+  CEO --> China
+  CEO --> VN
+
+  TW --> Sales
+  TW --> Prod
+  TW --> Dev
+  TW --> ProdMgmt
+  TW --> OpsMgmt
