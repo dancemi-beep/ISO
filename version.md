@@ -1,5 +1,13 @@
 # 版本更新紀錄 (Version History)
 
+## v0.2.0 - 2026-03-05
+* **狀態**: 開發階段 (Execution Phase) - Phase 2 & 3 核心引擎與介面完成
+* **更新內容**:
+  * [核心引擎] 完成 `document_generator.py` (導入 `docxtpl` 保留排版) 與 `batch_tagger.py` (支援 56 份檔案批次標籤化)。
+  * [試算分析] 完成 `excel_calculator.py` 使用 `openpyxl` 進行動態風險值計算並抓出超標風險。
+  * [前端介面] 使用 Flask + TailwindCSS 構建「四階段導入問卷系統」，並將使用者表單成功介接核心引擎，實現一鍵打包產生。
+  * 更新進度追蹤至 `current.md` 及梳理 `walkthrough.md`。
+
 ## v0.1.4 - 2026-03-05
 * **狀態**: 規劃階段 (Planning Phase) - 核心設計補強
 * **更新內容**:
