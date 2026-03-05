@@ -1,0 +1,849 @@
+{
+    "IS-001": [
+        {
+            "filename": "IS-001 資訊安全政策.docx",
+            "tier": "Tier 1 - Policy",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-001-01目標管控及量測表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-001-02資訊安全政策宣言.docx",
+            "tier": "Tier 1 - Policy",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-001-03人員資訊安全守則.docx",
+            "tier": "Tier 3 - Guideline/Instruction",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-002": [
+        {
+            "filename": "IS-002-01全景評鑑表20240527 -001.pdf",
+            "tier": "Tier 4 - Record/Form",
+            "type": "pdf",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department",
+                "iso_scope"
+            ]
+        },
+        {
+            "filename": "IS-002-01組織全景鑑別表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-02內部稽核查檢表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-03矯正與預防處理單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-04管制文件一覽表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-05外來文件一覽表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-05文件制訂修訂及廢止申請單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-06文件制訂修訂及廢止申請單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-07內部稽核計畫.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-08內部稽核報告.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-09管理審查會議紀錄.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-002-資訊安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-003": [
+        {
+            "filename": "IS-003-01人員執掌及外部聯絡清單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-003-02教育訓練計畫表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-003-03教育訓練簽到表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-003-04委外人員保密切結書.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-003-05內外部溝通管制表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS003-組織及人力管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-004": [
+        {
+            "filename": "IS-004-01資產及風險評鑑表.xlsx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "excel",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department",
+                "acceptable_risk_level"
+            ]
+        },
+        {
+            "filename": "IS-004-02風險處理計畫.xlsx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "excel",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-004-03風險評鑑報告.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-004-風險評鑑管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-005": [
+        {
+            "filename": "IS-005-資產管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-006": [
+        {
+            "filename": "IS-006-01帳號審查表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-006-02資訊服務申請單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-006-存取控制管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-007": [
+        {
+            "filename": "IS-007 實體安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-007-01資訊機房進出管制表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-007-02資訊機房管理紀錄表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-008": [
+        {
+            "filename": "IS-008-01備份管理作業表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-008-02弱點處理作業表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-008-03個人及筆記型電腦設備檢查表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-008-04員工攜帶自有設備申請書.docx",
+            "tier": "Tier 3 - Guideline/Instruction",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-008-作業安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-009": [
+        {
+            "filename": "IS-009-通訊安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-010": [
+        {
+            "filename": "IS-010-01資訊系統獲取、開發及維護管制表.xlsx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "excel",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-010資訊系統獲取、開發及維護管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-011": [
+        {
+            "filename": "IS-011 供應商管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-011-01 供應商評鑑表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-011-02 供應商保密切結書.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-012": [
+        {
+            "filename": "IS-012-01威脅情資與監控活動管制表(範例).docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-012-02資訊安全事故報告單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-012資訊安全事件管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-013": [
+        {
+            "filename": "IS-013 營運持續管理程序 .docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-013-01業務流程營運衝擊分析表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-013-02 營運持續計畫演練規劃暨處理報告單.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-014": [
+        {
+            "filename": "IS-014-遵循性管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-015": [
+        {
+            "filename": "IS-015-01資料銷毀紀錄表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-015-資料安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-016": [
+        {
+            "filename": "IS-016 變更與組態管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-016-01變更申請表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-016-02組態變更測試作業表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-016-03組態管理紀錄表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-017": [
+        {
+            "filename": "IS-017 雲端服務安全管理程序.docx",
+            "tier": "Tier 2 - Procedure",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "IS-017-01雲端服務安全控制措施查檢表.docx",
+            "tier": "Tier 4 - Record/Form",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ],
+    "IS-018": [
+        {
+            "filename": "IS-018適用性聲明書.docx",
+            "tier": "Tier 1 - Policy",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department",
+                "soa_version"
+            ]
+        }
+    ],
+    "Other": [
+        {
+            "filename": "Icon\r",
+            "tier": "Tier 3 - Guideline/Instruction",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        },
+        {
+            "filename": "風險評鑑方法.png",
+            "tier": "Tier 3 - Guideline/Instruction",
+            "type": "word",
+            "variables": [
+                "company_name",
+                "company_short_name",
+                "publish_date",
+                "version",
+                "doc_number",
+                "department"
+            ]
+        }
+    ]
+}
