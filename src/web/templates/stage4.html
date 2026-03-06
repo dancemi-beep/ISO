@@ -48,49 +48,107 @@
             </h2>
         </div>
 
-        <form id="stage4-form" class="p-6 sm:p-8" method="POST" action="{{ url_for('generate_all') }}">
+        <div class="p-6 sm:p-8">
 
-            <div class="text-center py-8">
-                <div
-                    class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-500 mb-6">
-                    <i class="fa-regular fa-circle-check fa-4x mb-1"></i>
+            <!-- Integrity Check Panel -->
+            {% if checks %}
+            <div class="mb-8 space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-indigo-500"></i> 體系鉤稽檢查結果
+                </h3>
+
+                {% if checks.passed %}
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-green-700 mb-2"><i class="fa-solid fa-circle-check mr-1"></i> 通過 ({{
+                        checks.passed|length }})</h4>
+                    <ul class="text-green-700 text-sm space-y-1">
+                        {% for p in checks.passed %}
+                        <li>• {{ p }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-800 mb-4">資料收集完成！</h3>
-                <p class="text-gray-600 max-w-2xl mx-auto mb-8">
-                    您已完成所有必要的客製化設定。系統已將您的企業資訊、風險閾值與管理規定紀錄於 <code>user_data.json</code>。<br>
-                    點擊下方按鈕，系統核心引擎將自動啟動：<br>
-                    <span
-                        class="inline-block mt-4 text-sm text-left align-middle space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <i class="fa-solid fa-tags text-indigo-500 w-5"></i> 自動讀取 4 階層結構映射檔<br>
-                        <i class="fa-solid fa-file-word text-blue-500 w-5"></i> 遍歷替換 56 份 DOCX/XLSX 文件變數<br>
-                        <i class="fa-solid fa-calculator text-green-500 w-5"></i> 產生資產風險評鑑與統計報告
-                    </span>
-                </p>
+                {% endif %}
 
-                <button type="submit" id="generate-btn"
-                    class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-300 shadow-lg transform transition hover:-translate-y-1 inline-flex items-center">
-                    <i class="fa-solid fa-bolt mr-2 text-yellow-300"></i> 一鍵生成全套 ISMS 文件
-                </button>
-
-                <div id="loading-spinner"
-                    class="hidden mt-6 text-indigo-600 font-medium flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i> 正在批次生成中，請稍候...
+                {% if checks.warnings %}
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-yellow-700 mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                        警告 ({{ checks.warnings|length }})</h4>
+                    <ul class="text-yellow-700 text-sm space-y-1">
+                        {% for w in checks.warnings %}
+                        <li>• {{ w }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div>
+                {% endif %}
 
-            <div class="pt-4 border-t border-gray-100 flex justify-start items-center mt-4">
-                <a href="{{ url_for('stage3') }}"
-                    class="text-gray-500 hover:text-gray-700 font-medium transition flex items-center">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> 上一步：管理程序
-                </a>
+                {% if checks.errors %}
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-red-700 mb-2"><i class="fa-solid fa-circle-xmark mr-1"></i> 錯誤 ({{
+                        checks.errors|length }})</h4>
+                    <ul class="text-red-700 text-sm space-y-1">
+                        {% for e in checks.errors %}
+                        <li>• {{ e }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
             </div>
-        </form>
+            {% endif %}
+
+            <!-- Generate Button -->
+            <form id="stage4-form" method="POST" action="{{ url_for('generate_all') }}">
+                <div class="text-center py-8">
+                    <div
+                        class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-500 mb-6">
+                        <i class="fa-regular fa-circle-check fa-4x mb-1"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">資料收集完成！</h3>
+                    <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+                        您已完成所有必要的客製化設定。系統已將您的企業資訊、風險閾值與管理規定紀錄於 <code>user_data.json</code>。<br>
+                        點擊下方按鈕，系統核心引擎將自動啟動：<br>
+                        <span
+                            class="inline-block mt-4 text-sm text-left align-middle space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <i class="fa-solid fa-tags text-indigo-500 w-5"></i> 自動讀取 4 階層結構映射檔<br>
+                            <i class="fa-solid fa-file-word text-blue-500 w-5"></i> 遍歷替換 DOCX/XLSX 文件變數<br>
+                            <i class="fa-solid fa-calculator text-green-500 w-5"></i> 產生資產風險評鑑與統計報告<br>
+                            <i class="fa-solid fa-book text-purple-500 w-5"></i> 自動生成導入指引手冊<br>
+                            <i class="fa-solid fa-file-zipper text-orange-500 w-5"></i> 全部打包為 ZIP 壓縮檔供下載
+                        </span>
+                    </p>
+
+                    {% if checks and checks.errors %}
+                    <button type="button" disabled
+                        class="px-8 py-4 bg-gray-400 text-white text-lg font-bold rounded-xl cursor-not-allowed inline-flex items-center">
+                        <i class="fa-solid fa-ban mr-2"></i> 請先修正上方錯誤後才能生成
+                    </button>
+                    {% else %}
+                    <button type="submit" id="generate-btn"
+                        class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-300 shadow-lg transform transition hover:-translate-y-1 inline-flex items-center">
+                        <i class="fa-solid fa-bolt mr-2 text-yellow-300"></i> 一鍵生成全套 ISMS 文件
+                    </button>
+                    {% endif %}
+
+                    <div id="loading-spinner"
+                        class="hidden mt-6 text-indigo-600 font-medium flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i> 正在批次生成中，請稍候...
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-100 flex justify-start items-center mt-4">
+                    <a href="{{ url_for('stage3') }}"
+                        class="text-gray-500 hover:text-gray-700 font-medium transition flex items-center">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> 上一步：管理程序
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
     document.getElementById('stage4-form').addEventListener('submit', function () {
-        document.getElementById('generate-btn').classList.add('hidden');
+        var btn = document.getElementById('generate-btn');
+        if (btn) btn.classList.add('hidden');
         document.getElementById('loading-spinner').classList.remove('hidden');
     });
 </script>

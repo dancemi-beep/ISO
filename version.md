@@ -1,5 +1,23 @@
 # 版本更新紀錄 (Version History)
 
+## v0.4.0 - 2026-03-06
+* **狀態**: 交付封裝完成 (Delivery Phase) - Phase 5 完成
+* **更新內容**:
+  * [交付] 新增 `README.md` 系統操作手冊，包含快速啟動、專案結構、使用流程、範本修改教學、變數對照表。
+  * [交付] 新增 `start.sh` 一鍵啟動腳本，自動建立 venv 與安裝依賴。
+  * [交付] 新增 `requirements.txt` 凍結 5 個生產環境依賴。
+  * [修正] 補齊 `files/marked/` 中缺失的 3 份 `.xlsx` 範本（IS-004-01/02、IS-010-01），範本總數 56 → 59。
+  * [維護] `.gitignore` 加入 `output/`、`user_data.json`、`*.zip`。
+
+## v0.3.0 - 2026-03-06
+* **狀態**: 開發階段 (Execution Phase) - Phase 4 整合與封裝完成
+* **更新內容**:
+  * [核心引擎] `document_generator.py` 新增 `.xlsx` 範本替換 (openpyxl)、`generate_all()` 回傳結構化摘要、`doc_number` 依 family key 自動注入。
+  * [鉤稽檢查] 新增 `integrity_checker.py`：檢查範本存在性、Tier 2 程序書完整性、可處理類型驗證。Stage 4 UI 展示檢查結果面板。
+  * [導讀手冊] 新增 `readme_generator.py`：依 user_data 動態產出 `導入指引手冊.docx`。
+  * [ZIP 封裝] `app.py` 加入 `zipfile` 自動壓縮 output 目錄、`/api/download` 下載路由，success 頁面新增下載按鈕與生成摘要卡片。
+  * [E2E 測試] 新增 `src/tests/test_e2e.py`，11 項測試全數通過。
+
 ## v0.2.0 - 2026-03-05
 * **狀態**: 開發階段 (Execution Phase) - Phase 2 & 3 核心引擎與介面完成
 * **更新內容**:
