@@ -10,7 +10,8 @@
                 "publish_date",
                 "version",
                 "doc_number",
-                "department"
+                "department",
+                "isms_scope"
             ]
         },
         {

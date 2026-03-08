@@ -78,7 +78,7 @@ class DocumentGenerator:
                                 cell.value = new_val
 
             # Special logic for IS-004-01 Asset & Risk Assessment
-            if "IS-004-01" in filename:
+            if "IS-004-01" in template_path:
                 ws = wb.active
                 core_systems = user_data.get("core_systems", "")
                 if core_systems:
@@ -153,45 +153,60 @@ class DocumentGenerator:
         # 5. Log Retention (mapping select option to number)
         user_data["log_retention_months"] = "6"
 
-        for family_key, files in self.structure.items():
+        doc_prefix = str(user_data.get("doc_prefix", "IS")).strip()
+        if not doc_prefix:
+            doc_prefix = "IS"
+            
+        def apply_prefix(text):
+            if not text: return text
+            # Only replace the leading 'IS'
+            if text.startswith("IS"):
+                return text.replace("IS", doc_prefix, 1)
+            return text
+
+        for original_family_key, files in self.structure.items():
+            family_key = apply_prefix(original_family_key)
+            
             for file_info in files:
-                filename = file_info['filename']
+                original_filename = file_info['filename']
+                filename = apply_prefix(original_filename)
+                
                 variables = file_info.get('variables', [])
                 file_type = file_info.get('type', 'word')
 
-                template_path = os.path.join(self.template_dir, filename)
+                template_path = os.path.join(self.template_dir, original_filename)
                 output_path = os.path.join(self.output_dir, filename)
 
                 if not os.path.exists(template_path):
-                    print(f"Warning: Template not found for {filename}")
-                    result["skipped"].append(filename)
+                    print(f"Warning: Template not found for {original_filename}")
+                    result["skipped"].append({"name": filename, "reason": "範本檔案不存在"})
                     continue
 
                 # --- Dynamic Exclusions based on Policies ---
-                if "IS-008-04" in filename and user_data.get("byod_policy") == "嚴格禁止自有設備處理公務":
+                if "IS-008-04" in original_filename and user_data.get("byod_policy") == "嚴格禁止自有設備處理公務":
                     print(f"Skipping {filename} due to BYOD policy")
-                    result["skipped"].append(filename)
+                    result["skipped"].append({"name": filename, "reason": "BYOD政策設定為嚴格禁止，無需此表單"})
                     continue
                 
-                # Auto-inject doc_number from family key (e.g. "IS-001")
+                # Auto-inject doc_number from family key (e.g. "ABC-001")
                 enriched_data = dict(user_data)
-                if 'doc_number' in variables and family_key != "Other":
+                if 'doc_number' in variables and original_family_key != "Other":
                     enriched_data.setdefault('doc_number', family_key)
 
-                if file_type == 'word' and filename.endswith('.docx'):
+                if file_type == 'word' and original_filename.endswith('.docx'):
                     ok = self.generate_document(template_path, output_path, variables, enriched_data)
-                elif file_type == 'excel' and filename.endswith('.xlsx'):
+                elif file_type == 'excel' and original_filename.endswith('.xlsx'):
                     ok = self.generate_excel(template_path, output_path, variables, enriched_data)
                 else:
                     print(f"Skipping unsupported type: {filename}")
-                    result["skipped"].append(filename)
+                    result["skipped"].append({"name": filename, "reason": "系統不支援此檔案類型"})
                     continue
 
                 if ok:
                     print(f"Generated: {filename}")
                     result["success"].append(filename)
                 else:
-                    result["failed"].append(filename)
+                    result["failed"].append({"name": filename, "reason": "處理過程發生預期外的錯誤"})
 
         return result
 

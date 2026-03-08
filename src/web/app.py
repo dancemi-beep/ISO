@@ -157,6 +157,15 @@ def generate_all():
         output_dir = os.path.join(BASE_DIR, "output")
         structure_file = os.path.join(BASE_DIR, "document_structure.json")
 
+        # Clear existing output files to prevent old files entering the zip
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        else:
+            for f in os.listdir(output_dir):
+                fp = os.path.join(output_dir, f)
+                if os.path.isfile(fp):
+                    os.remove(fp)
+
         # Generate all documents
         generator = DocumentGenerator(template_dir, output_dir, structure_file)
         result = generator.generate_all(data)
@@ -172,21 +181,34 @@ def generate_all():
         q_report_path = os.path.join(output_dir, "問卷填答總表.docx")
         q_gen.generate(data, q_report_path)
 
+        doc_prefix = str(data.get("doc_prefix", "IS")).strip()
+        if not doc_prefix:
+            doc_prefix = "IS"
+
+        def apply_prefix(text):
+            if not text: return text
+            if text.startswith("IS"):
+                return text.replace("IS", doc_prefix, 1)
+            return text
+
         # Create ZIP package with structured folders
         zip_path = os.path.join(output_dir, "ISMS文件包.zip")
         
         file_to_arcname = {}
-        for fkey, flist in generator.structure.items():
-            if fkey == "Other":
+        for original_fkey, flist in generator.structure.items():
+            fkey = apply_prefix(original_fkey)
+            if original_fkey == "Other":
                 folder_name = "其他文件"
             else:
                 main_doc = next((f['filename'] for f in flist if 'Tier 1' in f.get('tier','') or 'Tier 2' in f.get('tier','')), None)
-                folder_name = os.path.splitext(main_doc)[0] if main_doc else fkey
+                if main_doc:
+                    main_doc = apply_prefix(main_doc)
+                folder_name = (os.path.splitext(main_doc)[0] if main_doc else fkey).replace(" ", "-")
                 
             for f in flist:
                 tier = f.get('tier', '')
-                fname = f['filename']
-                if fkey == "Other":
+                fname = apply_prefix(f['filename'])
+                if original_fkey == "Other":
                     file_to_arcname[fname] = f"{folder_name}/{fname}"
                 elif 'Tier 1' in tier or 'Tier 2' in tier:
                     file_to_arcname[fname] = f"{folder_name}/{fname}"
@@ -195,10 +217,13 @@ def generate_all():
 
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
             # Create empty directory structures
-            for fkey, flist in generator.structure.items():
-                if fkey == "Other": continue
+            for original_fkey, flist in generator.structure.items():
+                if original_fkey == "Other": continue
+                fkey = apply_prefix(original_fkey)
                 main_doc = next((f['filename'] for f in flist if 'Tier 1' in f.get('tier','') or 'Tier 2' in f.get('tier','')), None)
-                folder_name = os.path.splitext(main_doc)[0] if main_doc else fkey
+                if main_doc:
+                    main_doc = apply_prefix(main_doc)
+                folder_name = (os.path.splitext(main_doc)[0] if main_doc else fkey).replace(" ", "-")
                 zf.writestr(f"{folder_name}/紀錄/", b'')
                 zf.writestr(f"{folder_name}/表單/", b'')
 
@@ -225,15 +250,15 @@ def generate_all():
                         import re
                         match = re.search(r'(IS-\d{3}(?:-\d{2})?)', fname)
                         if match:
-                            prefix = match.group(1)
+                            prefix = apply_prefix(match.group(1))
+                            new_fname = fname.replace("IS", doc_prefix, 1) if fname.startswith("IS") else fname
+
                             # Find which folder it belongs to
-                            target_arcname = f"其他文件/範本_{fname}"
+                            target_arcname = f"其他文件/範本_{new_fname}"
                             for k, fn in file_to_arcname.items():
                                 if k.startswith(prefix):
-                                    # It goes into the same directory as its template
-                                    # E.g. "IS-001 資訊安全政策/表單/IS-001-01..." 
                                     base_dir = os.path.dirname(fn)
-                                    target_arcname = f"{base_dir}/{fname}"
+                                    target_arcname = f"{base_dir}/{new_fname}"
                                     break
                             zf.write(fpath, target_arcname)
                         else:

@@ -3,22 +3,47 @@
 {% block content %}
 <div class="flex flex-col items-center justify-center py-12">
     <!-- Hero Section -->
-    <div class="text-center max-w-3xl mb-12 animate-fade-in-up">
-        <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl mb-4">
-            Automated <span class="text-indigo-600">ISO 27001</span> Generation
+    <div class="text-center max-w-4xl mb-12 animate-fade-in-up">
+        <div
+            class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-semibold text-sm mb-6">
+            <i class="fa-solid fa-award mr-2"></i> 諮力管理顧問有限公司 專屬自動化方案
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl mb-6 leading-tight">
+            讓 <span class="text-indigo-600">ISO 27001</span> 導入<br />化繁為簡的自動化平台
         </h1>
-        <p class="text-xl text-gray-500 mb-8">
-            透過引導式問卷，四個階段帶您自動生成專屬貴公司的 ISMS 資訊安全管理系統全套文件。
-        </p>
+        <div class="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-gray-100 shadow-sm mb-8">
+            <p class="text-xl text-indigo-900 font-medium mb-4">
+                「諮詢，為營運帶來資訊安全的力量，為營運創造信賴的合作」
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed text-justify md:text-center">
+                我們以「<span class="font-bold text-indigo-600">擺渡人</span>」的心態，協助台灣有資安意識的中小企業，在合理的預算下，將繁瑣的建置導入簡化，有效率的快速取得
+                ISO 27001 認證。諮力與驗證公司有極為良好的合作關係，為您提供無痛的一條龍稽核取證服務。
+            </p>
+        </div>
 
-        <div class="flex justify-center gap-4">
+        <!-- Security / Privacy Callout -->
+        <div
+            class="mb-8 p-4 rounded-xl bg-green-50/80 border-l-4 border-green-500 text-left shadow-sm flex items-start gap-4 mx-auto max-w-3xl">
+            <div class="text-green-600 mt-1">
+                <i class="fa-solid fa-shield-check fa-lg"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-green-900 mb-1">絕對的資料隱私保護 🔒</h4>
+                <p class="text-sm text-green-800 leading-relaxed">
+                    本系統涉及貴公司機敏資訊（如核心資產清單、風險評估與人員編制），因此系統設計採 <strong>100% 單機獨立執行
+                        (Localhost)</strong>。所有的運算與文件生成皆在您當下的電腦完成，<strong>絕不將任何隱私資料外流上傳至雲端</strong>，守護資安最高精神。
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
             <a href="{{ url_for('stage1') }}"
-                class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl">
-                開始導入流程 <i class="fa-solid fa-arrow-right ml-2"></i>
+                class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transform transition hover:-translate-y-1">
+                開始自動化導入流程 <i class="fa-solid fa-arrow-right ml-2"></i>
             </a>
-            <a href="#"
-                class="inline-flex items-center justify-center px-8 py-4 border border-gray-300 text-lg font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition">
-                讀取歷史進度
+            <a href="mailto:imitatemi@gmail.com"
+                class="inline-flex items-center justify-center px-8 py-4 border-2 border-indigo-100 text-lg font-medium rounded-xl text-indigo-700 bg-white hover:bg-indigo-50 hover:border-indigo-200 shadow-sm transition">
+                <i class="fa-solid fa-envelope mr-2"></i> 聯絡資深顧問
             </a>
         </div>
     </div>
