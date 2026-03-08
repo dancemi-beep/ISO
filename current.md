@@ -1,29 +1,21 @@
 # 目前開發進度與狀態 (Current Status)
 
-**最後更新時間：** 2026-03-06
+**最後更新時間：** 2026-03-08
 
-## 1. 目前完成事項
-* [x] 確立專案目標與系統規格 (撰寫 `sys_spec.md`)。
-* [x] 規劃專案開發進度與拆解任務 (撰寫 `plan.md`)。
-* [x] 建立版本控制與紀錄文件 (`version.md`)。
-* [x] 將原先 `導入文件` 內的各項 ISO 27001 範本檔案扁平化整理至 `files` 目錄，以便後續程式讀取。
-
-## 2. 開發狀態：✅ 全部完成
+## 1. 開發狀態
 
 | Phase | 狀態 | 說明 |
 |---|---|---|
-| Phase 1 | ✅ | POC 概念驗證 (python-docx) |
-| Phase 2 | ✅ | 核心引擎 (docxtpl + openpyxl + batch_tagger) |
-| Phase 3 | ✅ | Flask 四階段引導問卷 UI |
-| Phase 4 | ✅ | 鉤稽檢查、導讀手冊、ZIP 封裝、E2E 測試 |
-| Phase 5 | ✅ | README.md 操作手冊、start.sh 一鍵啟動、requirements.txt |
+| Phase 1~5 | ✅ 完成 | POC → 核心引擎 → UI → 整合測試 → 交付封裝 |
+| **Phase 6** | **🔄 進行中** | 範本驅動問卷重構與標記強化 |
 
-## 3. 交付清單
-* `README.md` — 系統操作手冊（含範本修改教學、變數對照表）
-* `start.sh` — 一鍵啟動腳本（自動建立 venv、安裝套件）
-* `requirements.txt` — Python 依賴凍結
-* 59 份已標籤化範本於 `files/marked/`
-* 11 項 E2E 測試通過（`src/tests/test_e2e.py`）
+## 2. Phase 6 進度
 
-## 4. 待確認事項或阻礙
-* 無。Phase 1~5 全數完成。
+- [x] **6.1 補完標籤化**：修正 `batch_tagger.py` 新增 OOOO/OOO/XXX 替換規則，重新處理全部 59 份範本。新增 4 個變數：`dept_name`、`publish_date_short`、`company_domain`、`jurisdiction`。
+- [x] **6.2 操作型表單標記**：建立 `template_marker.py`，對 16 份 docx + 1 份 xlsx 插入黃底「⚠ 使用者須知」提示段落。
+- [ ] **6.3 問卷欄位逆推**：逐一審閱 59 份範本定義 `questionnaire_fields`
+- [ ] **6.4 前端動態化**
+- [ ] **6.5 驗證**
+
+## 3. 測試
+* 11/11 E2E 測試通過

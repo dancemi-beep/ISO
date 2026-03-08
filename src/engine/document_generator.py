@@ -21,8 +21,30 @@ class DocumentGenerator:
         """Generate a single .docx document by replacing variables using docxtpl."""
         try:
             doc = DocxTemplate(template_path)
-            context = {var: user_data.get(var, f"[Missing: {var}]") for var in variables}
-            doc.render(context)
+            context = dict(user_data)
+            # Still provide [Missing: var] for any missing explicit variables
+            for var in variables:
+                if var not in context or not str(context[var]).strip():
+                    context[var] = f"[Missing: {var}]"
+            
+            # Apply Tier 1/2 Bold 24pt formatting to the company_name if present
+            # For Tier 1 and Tier 2 docs, we want the title page company name to standout
+            if "Tier 1" in template_path or "Tier 2" in template_path or "政策" in template_path or "程序" in template_path:
+                doc.render(context)
+                
+                # Re-open doc with standard python-docx to apply formatting to the first paragraph 
+                # that matches the company name
+                from docx.shared import Pt
+                for para in doc.paragraphs:
+                    if user_data.get("company_name", "") in para.text:
+                        for run in para.runs:
+                            if user_data.get("company_name", "") in run.text:
+                                run.font.bold = True
+                                run.font.size = Pt(24)
+                        break # Only apply to the first occurrence (usually the title page)
+            else:
+                doc.render(context)
+                
             doc.save(output_path)
             return True
         except Exception as e:
@@ -55,6 +77,35 @@ class DocumentGenerator:
                             if new_val != cell.value:
                                 cell.value = new_val
 
+            # Special logic for IS-004-01 Asset & Risk Assessment
+            if "IS-004-01" in filename:
+                ws = wb.active
+                core_systems = user_data.get("core_systems", "")
+                if core_systems:
+                    # Parse systems (split by common delimiters)
+                    import re
+                    systems = [s.strip() for s in re.split(r'[、,\n]', core_systems) if s.strip()]
+                    
+                    # Start writing from row 5, col 2 (B5) for Asset Name
+                    start_row = 5
+                    for i, system in enumerate(systems):
+                        row = start_row + i
+                        ws.cell(row=row, column=2).value = system
+                        ws.cell(row=row, column=3).value = f"自動帶入系統: {system}"
+                        ws.cell(row=row, column=5).value = "軟體類"
+                        ws.cell(row=row, column=6).value = "應用系統"
+                        
+                        # Set default CIA to 2 so formula logic works
+                        ws.cell(row=row, column=9).value = 2 # C
+                        ws.cell(row=row, column=10).value = 2 # I
+                        ws.cell(row=row, column=11).value = 2 # A
+                        
+                        # Copy formulas from row 5 logic if we go past row 5
+                        if row > 5:
+                            ws.cell(row=row, column=12).value = f"=SUM(I{row}:K{row})" # P
+                            ws.cell(row=row, column=25).value = f'=IF(L{row}*U{row}*W{row}*X{row}=0,"",L{row}*U{row}*W{row}*X{row})'
+                            ws.cell(row=row, column=31).value = f'=IF(AA{row}*AB{row}*AC{row}*AD{row}=0,"",AA{row}*AB{row}*AC{row}*AD{row})'
+
             wb.save(output_path)
             return True
         except Exception as e:
@@ -68,6 +119,39 @@ class DocumentGenerator:
             dict: {"success": [...], "failed": [...], "skipped": [...]}
         """
         result = {"success": [], "failed": [], "skipped": []}
+
+        # --- Derive Policy Clauses from P2/P3 Questionnaire Choices ---
+        # 1. BYOD Policy
+        byod_choice = user_data.get("byod_policy", "")
+        if byod_choice == "嚴格禁止自有設備處理公務":
+            user_data["byod_policy_clause"] = "本公司嚴格禁止同仁將個人自攜資訊設備（如筆記型電腦、智能手機、平板電腦等）連接公司網路或處理公務資料。"
+            user_data["byod_security_clause"] = "（因全面禁止 BYOD，故不適用自攜設備安全規範）"
+        elif byod_choice == "自由開放":
+            user_data["byod_policy_clause"] = "本公司開放同仁因工作目的，將個人自攜資訊設備連接公司網路或作業環境，惟仍須遵守基本安全規範。"
+            user_data["byod_security_clause"] = "自攜資訊設備作業系統建議保持更新至最新版本；並安裝防毒軟體與及時更新病毒碼。"
+        else: # Default: 有條件開放
+            user_data["byod_policy_clause"] = "本公司所有同仁因工作目的，將個人自攜資訊設備（如筆記型電腦、智能手機、平板電腦等）連接公司網路作業工作環境時，必須填寫「員工攜帶自有設備申請書」，先行取得公司授權及同意。"
+            user_data["byod_security_clause"] = "自攜資訊設備作業系統必須開啟自動更新，保持更新至最新版本；並安裝適切防毒軟體與及時更新病毒碼。"
+
+        # 2. Remote Access Policy
+        remote_choice = user_data.get("remote_access_policy", "")
+        if remote_choice == "必須使用 VPN + MFA (多因素驗證)":
+            user_data["remote_access_clause"] = "應建立網路傳送資訊之安全控管機制，且所有遠端連線均須透過虛擬私人網路 (VPN) 並啟用多重因素驗證 (MFA)，以確保資訊傳輸交換安全。"
+        elif remote_choice == "無限制開放存取":
+            user_data["remote_access_clause"] = "公司對外服務以便利性為優先，外部存取直接透過網際網路連線，惟重要系統仍應具備基本登入驗證。"
+        else:
+            user_data["remote_access_clause"] = "應建立網路傳送資訊之安全控管機制（如防火牆、安全憑證、VPN或加解密系統或服務等），以確保資訊傳輸交換安全。"
+
+        # 3. Web Filtering Policy
+        user_data["web_filtering_clause"] = "網頁過濾：組織應定期檢視相關網路設定，如需變更相關規則，應填寫「資訊服務申請單」，並針對員工對外部資源存取行為進行過濾及審查，避免遭受惡意攻擊，可考量下列方式以強化對外網站存取行為之安全性："
+        user_data["firewall_review_clause"] = "為求落實安全管理，於防火牆安全規則建置後，應每年審查規則之適用性，並予以檢討修正，避免因時間或業務變更而不符現狀。"
+        
+        # 4. Incident Reporting
+        incident_time = user_data.get("incident_report_time", "發現後 1 小時內")
+        user_data["incident_report_clause"] = f"發現疑似資訊安全異常事件或事故時，本公司同仁與委外人員皆負有於{incident_time}即時通報之責任。"
+
+        # 5. Log Retention (mapping select option to number)
+        user_data["log_retention_months"] = "6"
 
         for family_key, files in self.structure.items():
             for file_info in files:
@@ -83,6 +167,12 @@ class DocumentGenerator:
                     result["skipped"].append(filename)
                     continue
 
+                # --- Dynamic Exclusions based on Policies ---
+                if "IS-008-04" in filename and user_data.get("byod_policy") == "嚴格禁止自有設備處理公務":
+                    print(f"Skipping {filename} due to BYOD policy")
+                    result["skipped"].append(filename)
+                    continue
+                
                 # Auto-inject doc_number from family key (e.g. "IS-001")
                 enriched_data = dict(user_data)
                 if 'doc_number' in variables and family_key != "Other":

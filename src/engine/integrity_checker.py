@@ -29,7 +29,7 @@ class IntegrityChecker:
         """Ensure each IS-0XX family has at least one Tier 2 (Procedure) document."""
         warnings = []
         for family_key, files in self.structure.items():
-            if family_key == "Other":
+            if family_key in ("Other", "IS-001", "IS-018"):
                 continue
             tiers = [f.get('tier', '') for f in files]
             has_tier2 = any('Tier 2' in t for t in tiers)

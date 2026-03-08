@@ -1,5 +1,32 @@
 # 版本更新紀錄 (Version History)
 
+## v0.7.0 - 2026-03-08
+* **狀態**: Phase 7 完成 — 測試回饋修復與新增報告/範例功能
+* **更新內容**:
+  * [修復] `IS-001-03` 密碼到期條文與問卷同步。
+  * [修復] `IS-004-03` 風險值條文自動帶入。
+  * [修復] `IS-003` 目錄前綴正名。
+  * [修復] `IS-001-02` 第一頁公司簡介替換為問卷設定之產業描述，並改列 Tier 4 歸入表單目錄。
+  * [修復] Tier 1 / Tier 2 文件封面公司名稱自動套用 24 級粗體。
+  * [修復] 移除打包 ZIP 內不必要的 `_output` 等測試中繼檔。
+  * [新增] 實作 `questionnaire_report.py`，自動產生 `問卷填答總表.docx`。
+  * [新增] 打包引擎實作 `examples/` 自動巡查機制，將範例檔併入對應目錄。
+* **狀態**: Phase 6b 完成 — P2/P3 深層問卷產出機制實作
+* **更新內容**:
+  * [文檔] 設計產出規劃 (`p2_p3_generation_plan.md`)，並獲核准。
+  * [引擎] `batch_tagger.py` 新增 10 條管理條文置換（如 BYOD、VPN、備份機制）。
+  * [引擎] `document_generator.py` 新增條件排除機制（如：禁用 BYOD 則不產出相關表單）。
+  * [引擎] `document_generator.py` 實作 Excel 動態預填模組，收集的「核心系統」自動逐列寫入 `IS-004-01`。
+  * [測試] 11/11 E2E Workflow 測試全數通過。
+* **狀態**: Phase 6 完成 — 範本驅動問卷重構
+* **更新內容**:
+  * [引擎] `batch_tagger.py` 新增 OOOO/OOO/XXX/○○○○○ 替換規則，全 59 份範本重新標籤化。
+  * [引擎] 新增 `template_marker.py`，對 17 份操作型表單插入「⚠ 使用者須知」黃底提示。
+  * [問卷] 新增 `questionnaire_config.json`，定義 20 個問卷欄位（階段一 12 題、階段二 2 題、階段三 6 題）。
+  * [前端] 新增 `_stage_form.html` 可重用表單 partial，stage1/2/3 改為動態渲染。
+  * [後端] `app.py` 載入 questionnaire config、新增衍生變數計算（`publish_date_short`、`dept_name`）。
+  * [結構] `document_structure.json` 新增 4 個變數、移除非範本檔案（PDF/Icon/PNG）。
+
 ## v0.4.0 - 2026-03-06
 * **狀態**: 交付封裝完成 (Delivery Phase) - Phase 5 完成
 * **更新內容**:

@@ -1,0 +1,490 @@
+{
+    "stage1": {
+        "title": "專案啟動與範圍定義",
+        "sections": [
+            {
+                "heading": "一、組織基本資料",
+                "icon": "fa-building",
+                "fields": [
+                    {
+                        "var": "company_name",
+                        "label": "公司完整名稱（含『股份有限公司』）",
+                        "type": "text",
+                        "placeholder": "例：新世紀虛擬科技股份有限公司",
+                        "required": true
+                    },
+                    {
+                        "var": "company_short_name",
+                        "label": "公司簡稱",
+                        "type": "text",
+                        "placeholder": "例：新世紀",
+                        "required": true
+                    },
+                    {
+                        "var": "company_address",
+                        "label": "主要營運據點地址",
+                        "type": "text",
+                        "placeholder": "例：台北市信義區信義路五段7號",
+                        "required": false,
+                        "help": "用於 ISMS 範圍聲明（IS-002 組織全景鑑別表）中的實體位置界定。"
+                    },
+                    {
+                        "var": "employee_count",
+                        "label": "員工人數（約）",
+                        "type": "text",
+                        "placeholder": "例：150 人",
+                        "required": false
+                    },
+                    {
+                        "var": "industry_type",
+                        "label": "產業類別",
+                        "type": "select",
+                        "options": [
+                            "資訊科技業",
+                            "金融業",
+                            "製造業",
+                            "醫療業",
+                            "電商/零售業",
+                            "顧問/服務業",
+                            "政府/公部門",
+                            "其他"
+                        ],
+                        "required": true,
+                        "help": "影響適用法規與風險評鑑重點。"
+                    },
+                    {
+                        "var": "industry_description",
+                        "label": "主要業務活動與核心產品/服務描述",
+                        "type": "textarea",
+                        "placeholder": "例：本公司為 Fabless IC 設計公司，提供顯示器驅動 DDIC、電源控制晶片等產品...",
+                        "required": false,
+                        "help": "用於「資訊安全政策宣言 (IS-001-02)」中描述公司營運概況。若不填寫，產出文件中將保留範例文字。"
+                    }
+                ]
+            },
+            {
+                "heading": "二、ISMS 推動組織與高階管理層",
+                "icon": "fa-users-gear",
+                "fields": [
+                    {
+                        "var": "department",
+                        "label": "ISMS 權責部門/推動組織名稱",
+                        "type": "text",
+                        "placeholder": "例：資訊安全委員會",
+                        "required": true,
+                        "help": "此組織將作為 IS-001 等一階文件的最高核定發布者。"
+                    },
+                    {
+                        "var": "ciso_name",
+                        "label": "資訊安全長 (CISO) / ISMS 負責人姓名",
+                        "type": "text",
+                        "placeholder": "例：王大明",
+                        "required": false,
+                        "help": "用於「資訊安全政策宣言 (IS-001-02)」及「內部稽核計畫 (IS-002-07)」。"
+                    },
+                    {
+                        "var": "ciso_title",
+                        "label": "資訊安全長職稱",
+                        "type": "text",
+                        "placeholder": "例：資訊長兼任 CISO",
+                        "required": false
+                    },
+                    {
+                        "var": "security_committee_dept1",
+                        "label": "資安小組成員部門（一）",
+                        "type": "text",
+                        "placeholder": "例：資訊部",
+                        "required": false,
+                        "help": "用於「資訊安全政策宣言」描述資安小組組成。"
+                    },
+                    {
+                        "var": "security_committee_dept2",
+                        "label": "資安小組成員部門（二）",
+                        "type": "text",
+                        "placeholder": "例：人力資源部",
+                        "required": false
+                    },
+                    {
+                        "var": "mgmt_commitment",
+                        "label": "高階管理層對資安的承諾概述",
+                        "type": "textarea",
+                        "placeholder": "例：董事長已在內部會議中多次強調資安的重要性，並承諾提供足夠資源。總經理明確指出 ISO 27001 驗證為今年度首要戰略目標。",
+                        "required": false,
+                        "help": "用於「管理審查會議紀錄 (IS-002-09)」作為決策參考基礎。若留空，產出文件中將標記為待補充。"
+                    }
+                ]
+            },
+            {
+                "heading": "三、文件基本設定",
+                "icon": "fa-file-lines",
+                "fields": [
+                    {
+                        "var": "publish_date",
+                        "label": "文件首次發布日期",
+                        "type": "date",
+                        "placeholder": "YYYY/MM/DD",
+                        "required": true
+                    },
+                    {
+                        "var": "version",
+                        "label": "初始文件版次",
+                        "type": "text",
+                        "placeholder": "1.0",
+                        "required": true
+                    },
+                    {
+                        "var": "jurisdiction",
+                        "label": "合約管轄法院",
+                        "type": "text",
+                        "placeholder": "例：臺灣臺北",
+                        "required": false,
+                        "help": "用於「供應商保密切結書 (IS-011-02)」中的管轄法院條款。"
+                    },
+                    {
+                        "var": "company_domain",
+                        "label": "公司官方網域",
+                        "type": "text",
+                        "placeholder": "例：www.example.com.tw",
+                        "required": false,
+                        "help": "用於「風險評鑑報告 (IS-004-03)」中的系統資產描述。"
+                    }
+                ]
+            },
+            {
+                "heading": "四、ISMS 驗證範圍",
+                "icon": "fa-crosshairs",
+                "fields": [
+                    {
+                        "var": "iso_scope",
+                        "label": "ISMS 驗證範圍說明（Scope Statement）",
+                        "type": "textarea",
+                        "placeholder": "例：本公司雲端服務之開發、維運及客戶資料處理作業，涵蓋台北總公司辦公區域及資訊機房。",
+                        "required": true,
+                        "help": "此範圍聲明將直接帶入 IS-002 組織全景分析中作為適用範圍。建議包含：納入的部門/流程/地點/系統。"
+                    },
+                    {
+                        "var": "scope_departments",
+                        "label": "納入驗證的部門/單位",
+                        "type": "textarea",
+                        "placeholder": "例：總經理室、資訊部、研發部、業務部、財務部、人資部",
+                        "required": false,
+                        "help": "用於「人員執掌及外部聯絡清單 (IS-003-01)」及組織全景。"
+                    },
+                    {
+                        "var": "scope_locations",
+                        "label": "納入驗證的實體位置",
+                        "type": "textarea",
+                        "placeholder": "例：總公司辦公室（XX市XX區XX路XX號X樓）、機房A（X樓）",
+                        "required": false
+                    },
+                    {
+                        "var": "scope_exclusions",
+                        "label": "明確排除的項目及理由（若有）",
+                        "type": "textarea",
+                        "placeholder": "例：海外分公司暫不納入，因業務性質單純且資安風險較低。",
+                        "required": false
+                    }
+                ]
+            }
+        ]
+    },
+    "stage2": {
+        "title": "資產盤點與風險評鑑",
+        "sections": [
+            {
+                "heading": "一、風險評鑑方法與參數",
+                "icon": "fa-shield-halved",
+                "fields": [
+                    {
+                        "var": "acceptable_risk_level",
+                        "label": "可接受風險值（門檻）",
+                        "type": "number",
+                        "placeholder": "例：27",
+                        "required": true,
+                        "help": "風險值超過此門檻的資產將被標記為高風險，需提報「風險處理計畫」。依據提供的方法論，建議值設定為 27。"
+                    },
+                    {
+                        "var": "risk_assessment_year",
+                        "label": "風險評鑑年度（民國年）",
+                        "type": "text",
+                        "placeholder": "例：115",
+                        "required": false,
+                        "help": "用於各項評鑑表單的年度欄位。"
+                    },
+                    {
+                        "var": "asset_inventory_strategy",
+                        "label": "資產盤點策略",
+                        "type": "select",
+                        "options": [
+                            "依資訊系統盤點（以系統為核心）",
+                            "依部門業務盤點（各部門自行盤點）",
+                            "混合模式"
+                        ],
+                        "required": true,
+                        "help": "決定「資產及風險評鑑表 (IS-004-01)」的造冊分工方式。"
+                    }
+                ]
+            },
+            {
+                "heading": "二、核心資產與環境概況",
+                "icon": "fa-database",
+                "fields": [
+                    {
+                        "var": "core_systems",
+                        "label": "核心資訊系統清單",
+                        "type": "textarea",
+                        "placeholder": "例：ERP 系統 (SAP)、CRM 系統 (Salesforce)、郵件伺服器 (Exchange Online)、檔案伺服器、自有研發系統",
+                        "required": false,
+                        "help": "用於初步識別 P (資產價值) 最高的核心系統目標。"
+                    },
+                    {
+                        "var": "cloud_services",
+                        "label": "使用中的雲端服務",
+                        "type": "textarea",
+                        "placeholder": "例：AWS (EC2, S3)、Microsoft 365、Google Workspace、Slack",
+                        "required": false,
+                        "help": "需特別注意雲端服務的共同責任模型 (Shared Responsibility)。"
+                    },
+                    {
+                        "var": "critical_data_types",
+                        "label": "關鍵資料類型",
+                        "type": "textarea",
+                        "placeholder": "例：客戶個資、財務報表、產品設計圖、營業秘密、員工個資",
+                        "required": false,
+                        "help": "影響 C (機密性) 等級評定的核心資料集。"
+                    },
+                    {
+                        "var": "network_description",
+                        "label": "現有網路環境概述",
+                        "type": "textarea",
+                        "placeholder": "例：內部 VLAN 劃分（辦公區/機房/訪客區）、VPN 遠端存取、防火牆 (Fortinet)",
+                        "required": false,
+                        "help": "評估網路層弱點 (V) 時的基礎架構參考。"
+                    }
+                ]
+            },
+            {
+                "heading": "三、威脅與弱點自評 (輔助風險定調)",
+                "icon": "fa-spider",
+                "fields": [
+                    {
+                        "var": "top_threats",
+                        "label": "近期高度關注之資安威脅 (T)",
+                        "type": "textarea",
+                        "placeholder": "例：勒索軟體攻擊、釣魚郵件防範、內部員工防諜、供應商資料外洩",
+                        "required": false,
+                        "help": "將幫助顧問聚焦高發生率的威脅情境。"
+                    },
+                    {
+                        "var": "top_vulnerabilities",
+                        "label": "組織目前自評最脆弱的環節 (V)",
+                        "type": "textarea",
+                        "placeholder": "例：員工資安意識不足、部分老舊系統無法更新修補程式、缺乏異地備援",
+                        "required": false,
+                        "help": "用於規劃第一階段優先導入的防護控制措施。"
+                    },
+                    {
+                        "var": "max_tolerable_downtime",
+                        "label": "核心系統最大可容忍中斷時間 (MTPD)",
+                        "type": "select",
+                        "options": [
+                            "4 小時以內",
+                            "8 小時以內",
+                            "24 小時以內",
+                            "超過 24 小時"
+                        ],
+                        "required": false,
+                        "help": "決定 A (可用性) 的衝擊容忍度，影響營運持續計畫 (BCP) 的力道。"
+                    }
+                ]
+            }
+        ]
+    },
+    "stage3": {
+        "title": "管理程序與規定檢核",
+        "sections": [
+            {
+                "heading": "一、存取控制與遠端作業",
+                "icon": "fa-key",
+                "fields": [
+                    {
+                        "var": "password_min_length",
+                        "label": "密碼最小長度",
+                        "type": "number",
+                        "placeholder": "例：12",
+                        "required": false,
+                        "help": "用於「存取控制管理程序 (IS-006)」中的密碼規則描述。"
+                    },
+                    {
+                        "var": "password_complexity",
+                        "label": "密碼複雜度要求",
+                        "type": "text",
+                        "placeholder": "例：須含大小寫英文、數字及特殊字元",
+                        "required": false
+                    },
+                    {
+                        "var": "password_expiry_days",
+                        "label": "密碼到期天數",
+                        "type": "number",
+                        "placeholder": "例：90",
+                        "required": false
+                    },
+                    {
+                        "var": "account_review_frequency",
+                        "label": "帳號權限審查頻率",
+                        "type": "select",
+                        "options": [
+                            "每季",
+                            "每半年",
+                            "每年"
+                        ],
+                        "required": false,
+                        "help": "用於「帳號審查表 (IS-006-01)」。"
+                    },
+                    {
+                        "var": "remote_access_policy",
+                        "label": "遠端辦公/VPN 存取要求",
+                        "type": "select",
+                        "options": [
+                            "必須使用 VPN + MFA (多因素驗證)",
+                            "僅使用 VPN",
+                            "無限制開放存取"
+                        ],
+                        "required": true,
+                        "help": "影響通訊安全與存取控制程序的規範寬嚴。"
+                    }
+                ]
+            },
+            {
+                "heading": "二、實體、設備與人員安全",
+                "icon": "fa-building-shield",
+                "fields": [
+                    {
+                        "var": "server_room_access",
+                        "label": "資訊機房進出管制要求",
+                        "type": "textarea",
+                        "placeholder": "例：外部人員進入需填寫管制表並由 IT 人員全程陪同，內部人員需刷卡管制。",
+                        "required": false,
+                        "help": "用於「實體安全管理程序 (IS-007)」。"
+                    },
+                    {
+                        "var": "byod_policy",
+                        "label": "員工攜帶自有設備 (BYOD) 政策",
+                        "type": "select",
+                        "options": [
+                            "嚴格禁止自有設備處理公務",
+                            "有條件開放（需填寫申請書並安裝 MDM）",
+                            "自由開放"
+                        ],
+                        "required": true,
+                        "help": "若選擇有條件開放，需加強落實「員工攜帶自有設備申請書 (IS-008-04)」。"
+                    },
+                    {
+                        "var": "nda_requirements",
+                        "label": "保密協定 (NDA) 簽署要求",
+                        "type": "textarea",
+                        "placeholder": "例：所有新進員工於報到日簽署；供應商於合約簽訂時一併簽署保密切結書。",
+                        "required": false,
+                        "help": "影響人力資源安全及供應商管理程序的實際操作。"
+                    }
+                ]
+            },
+            {
+                "heading": "三、系統維運與事故處理",
+                "icon": "fa-truck-medical",
+                "fields": [
+                    {
+                        "var": "backup_frequency",
+                        "label": "核心資料備份頻率",
+                        "type": "select",
+                        "options": [
+                            "每日",
+                            "每週",
+                            "每月"
+                        ],
+                        "required": true
+                    },
+                    {
+                        "var": "backup_location",
+                        "label": "備份儲存/地儲機制",
+                        "type": "text",
+                        "placeholder": "例：本地 NAS 備份 + AWS S3 異地備份",
+                        "required": false
+                    },
+                    {
+                        "var": "incident_report_time",
+                        "label": "重大資安事件內部通報時限",
+                        "type": "select",
+                        "options": [
+                            "發現後 1 小時內",
+                            "發現後 4 小時內",
+                            "發現後 24 小時內"
+                        ],
+                        "required": true,
+                        "help": "用於「資訊安全事件管理程序 (IS-012)」之 SLA 承諾。"
+                    },
+                    {
+                        "var": "system_change_approval",
+                        "label": "系統變更申請核准層級",
+                        "type": "select",
+                        "options": [
+                            "由 IT 主管 (部級) 核准即可",
+                            "需由資安長 (CISO) 簽核",
+                            "需召開變更審查會議 (CAB)"
+                        ],
+                        "required": true,
+                        "help": "影響「變更申請表 (IS-016-01)」的簽核流程設定。"
+                    }
+                ]
+            },
+            {
+                "heading": "四、稽核、合規與供應商",
+                "icon": "fa-scale-balanced",
+                "fields": [
+                    {
+                        "var": "audit_frequency",
+                        "label": "內部稽核與管審會議頻率",
+                        "type": "select",
+                        "options": [
+                            "每年一次",
+                            "每年兩次",
+                            "每季一次"
+                        ],
+                        "required": true
+                    },
+                    {
+                        "var": "vulnerability_scan_frequency",
+                        "label": "弱點掃描頻率",
+                        "type": "select",
+                        "options": [
+                            "每月",
+                            "每季",
+                            "每半年",
+                            "每年"
+                        ],
+                        "required": true
+                    },
+                    {
+                        "var": "supplier_audit_frequency",
+                        "label": "核心供應商評鑑頻率",
+                        "type": "select",
+                        "options": [
+                            "每年一次",
+                            "每兩年一次",
+                            "僅發生資安事件時重新評鑑"
+                        ],
+                        "required": true,
+                        "help": "用於「供應商管理程序 (IS-011)」。"
+                    },
+                    {
+                        "var": "applicable_laws",
+                        "label": "適用的資安/個資特定法規清單",
+                        "type": "textarea",
+                        "placeholder": "例：《個人資料保護法》、《營業秘密法》、《資通安全管理法》",
+                        "required": false
+                    }
+                ]
+            }
+        ]
+    }
+}

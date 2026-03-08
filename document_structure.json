@@ -28,7 +28,7 @@
         },
         {
             "filename": "IS-001-02資訊安全政策宣言.docx",
-            "tier": "Tier 1 - Policy",
+            "tier": "Tier 4 - Record/Form",
             "type": "word",
             "variables": [
                 "company_name",
@@ -36,7 +36,8 @@
                 "publish_date",
                 "version",
                 "doc_number",
-                "department"
+                "department",
+                "dept_name"
             ]
         },
         {
@@ -54,20 +55,6 @@
         }
     ],
     "IS-002": [
-        {
-            "filename": "IS-002-01全景評鑑表20240527 -001.pdf",
-            "tier": "Tier 4 - Record/Form",
-            "type": "pdf",
-            "variables": [
-                "company_name",
-                "company_short_name",
-                "publish_date",
-                "version",
-                "doc_number",
-                "department",
-                "iso_scope"
-            ]
-        },
         {
             "filename": "IS-002-01組織全景鑑別表.docx",
             "tier": "Tier 4 - Record/Form",
@@ -169,7 +156,8 @@
                 "publish_date",
                 "version",
                 "doc_number",
-                "department"
+                "department",
+                "publish_date_short"
             ]
         },
         {
@@ -330,7 +318,8 @@
                 "publish_date",
                 "version",
                 "doc_number",
-                "department"
+                "department",
+                "company_domain"
             ]
         },
         {
@@ -591,7 +580,8 @@
                 "publish_date",
                 "version",
                 "doc_number",
-                "department"
+                "department",
+                "jurisdiction"
             ]
         }
     ],
@@ -815,34 +805,6 @@
                 "doc_number",
                 "department",
                 "soa_version"
-            ]
-        }
-    ],
-    "Other": [
-        {
-            "filename": "Icon\r",
-            "tier": "Tier 3 - Guideline/Instruction",
-            "type": "word",
-            "variables": [
-                "company_name",
-                "company_short_name",
-                "publish_date",
-                "version",
-                "doc_number",
-                "department"
-            ]
-        },
-        {
-            "filename": "風險評鑑方法.png",
-            "tier": "Tier 3 - Guideline/Instruction",
-            "type": "word",
-            "variables": [
-                "company_name",
-                "company_short_name",
-                "publish_date",
-                "version",
-                "doc_number",
-                "department"
             ]
         }
     ]
