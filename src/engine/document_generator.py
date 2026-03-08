@@ -22,18 +22,48 @@ class DocumentGenerator:
         try:
             doc = DocxTemplate(template_path)
             context = dict(user_data)
+            
+            doc_prefix = str(user_data.get("doc_prefix", "IS")).strip() or "IS"
+            
             # Still provide [Missing: var] for any missing explicit variables
             for var in variables:
                 if var not in context or not str(context[var]).strip():
                     context[var] = f"[Missing: {var}]"
             
-            # Apply Tier 1/2 Bold 24pt formatting to the company_name if present
-            # For Tier 1 and Tier 2 docs, we want the title page company name to standout
-            if "Tier 1" in template_path or "Tier 2" in template_path or "政策" in template_path or "程序" in template_path:
-                doc.render(context)
+            # 1. Render Jinja tags
+            doc.render(context)
+            
+            # 2. Global Content Replacement (IS- -> PREFIX-)
+            if doc_prefix != "IS":
+                old_p = "IS-"
+                new_p = f"{doc_prefix}-"
                 
-                # Re-open doc with standard python-docx to apply formatting to the first paragraph 
-                # that matches the company name
+                # Helper to replace in paragraphs
+                def replace_in_paras(paras):
+                    for para in paras:
+                        if old_p in para.text:
+                            # Reconstruct text while trying to preserve some formatting if possible
+                            # simple replacement on para.text might break runs, but docxtpl render already happened
+                            # to be safe with runs:
+                            for run in para.runs:
+                                if old_p in run.text:
+                                    run.text = run.text.replace(old_p, new_p)
+
+                replace_in_paras(doc.paragraphs)
+                
+                for table in doc.tables:
+                    for row in table.rows:
+                        for cell in row.cells:
+                            replace_in_paras(cell.paragraphs)
+                
+                for section in doc.sections:
+                    for header in [section.header, section.first_page_header, section.even_page_header]:
+                        if header: replace_in_paras(header.paragraphs)
+                    for footer in [section.footer, section.first_page_footer, section.even_page_footer]:
+                        if footer: replace_in_paras(footer.paragraphs)
+
+            # 3. Apply Tier 1/2 Bold 24pt formatting to the company_name if present
+            if "Tier 1" in template_path or "Tier 2" in template_path or "政策" in template_path or "程序" in template_path:
                 from docx.shared import Pt
                 for para in doc.paragraphs:
                     if user_data.get("company_name", "") in para.text:
@@ -41,10 +71,8 @@ class DocumentGenerator:
                             if user_data.get("company_name", "") in run.text:
                                 run.font.bold = True
                                 run.font.size = Pt(24)
-                        break # Only apply to the first occurrence (usually the title page)
-            else:
-                doc.render(context)
-                
+                        break 
+
             doc.save(output_path)
             return True
         except Exception as e:
@@ -56,6 +84,8 @@ class DocumentGenerator:
         try:
             shutil.copy2(template_path, output_path)
             wb = openpyxl.load_workbook(output_path)
+            
+            doc_prefix = str(user_data.get("doc_prefix", "IS")).strip() or "IS"
 
             # Build replacement map from variables
             replacements = {}
@@ -64,16 +94,22 @@ class DocumentGenerator:
                 if val is not None:
                     replacements[var] = val
 
-            # Scan all sheets for Jinja-like {{ var }} patterns and replace
+            # Scan all sheets for Jinja-like {{ var }} patterns and global IS- prefix
             for sheet in wb.sheetnames:
                 ws = wb[sheet]
                 for row in ws.iter_rows():
                     for cell in row:
                         if cell.value and isinstance(cell.value, str):
                             new_val = cell.value
+                            # Replacement A: Variable Tags
                             for var, val in replacements.items():
                                 new_val = new_val.replace("{{" + var + "}}", str(val))
                                 new_val = new_val.replace("{{ " + var + " }}", str(val))
+                            
+                            # Replacement B: Global Prefix (IS- -> PREFIX-)
+                            if doc_prefix != "IS":
+                                new_val = new_val.replace("IS-", f"{doc_prefix}-")
+                                
                             if new_val != cell.value:
                                 cell.value = new_val
 
