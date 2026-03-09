@@ -30,10 +30,16 @@ class DocumentGenerator:
                 if var not in context or not str(context[var]).strip():
                     context[var] = f"[Missing: {var}]"
             
-            # 1. Render Jinja tags
+            # 1. Render Jinja tags and SAVE first. 
+            # DocxTemplate will overwrite header text modifications if we do it in memory before saving.
             doc.render(context)
+            doc.save(output_path)
             
-            # 2. Global Content Replacement (IS- -> PREFIX-)
+            # 2. Re-open with python-docx to process text replacements
+            from docx import Document
+            doc_obj = Document(output_path)
+            
+            # 3. Global Content Replacement (IS- -> PREFIX-)
             if doc_prefix != "IS":
                 old_p = "IS-"
                 new_p = f"{doc_prefix}-"
@@ -42,30 +48,54 @@ class DocumentGenerator:
                 def replace_in_paras(paras):
                     for para in paras:
                         if old_p in para.text:
-                            # Reconstruct text while trying to preserve some formatting if possible
-                            # simple replacement on para.text might break runs, but docxtpl render already happened
-                            # to be safe with runs:
+                            replaced = False
+                            # 1. Try to replace within single runs to preserve formatting
                             for run in para.runs:
                                 if old_p in run.text:
                                     run.text = run.text.replace(old_p, new_p)
+                                    replaced = True
+                            
+                            # 2. Try to handle the most common split: "IS" and "-"
+                            if not replaced:
+                                for i in range(len(para.runs) - 1):
+                                    if para.runs[i].text.endswith("IS") and para.runs[i+1].text.startswith("-"):
+                                        para.runs[i].text = para.runs[i].text[:-2] + new_p
+                                        # When fixing split runs like "IS" | "-0", keeping it clean ensures we just drop the "-" and keep the rest
+                                        para.runs[i+1].text = para.runs[i+1].text[1:]
+                                        replaced = True
+                                        break
+                                        
+                            # 3. Fallback: replace the whole paragraph text if it's still fragmented.
+                            # This loses run-level formatting but ensures the critical prefix is modified.
+                            if not replaced and old_p in para.text:
+                                text_copy = para.text
+                                para.text = text_copy.replace(old_p, new_p)
 
-                replace_in_paras(doc.paragraphs)
+                replace_in_paras(doc_obj.paragraphs)
                 
-                for table in doc.tables:
-                    for row in table.rows:
-                        for cell in row.cells:
-                            replace_in_paras(cell.paragraphs)
+                def process_tables(tables):
+                    for table in tables:
+                        for row in table.rows:
+                            for cell in row.cells:
+                                replace_in_paras(cell.paragraphs)
+                                process_tables(cell.tables) # Handle nested tables if any
                 
-                for section in doc.sections:
+                process_tables(doc_obj.tables)
+                
+                for section in doc_obj.sections:
                     for header in [section.header, section.first_page_header, section.even_page_header]:
-                        if header: replace_in_paras(header.paragraphs)
+                        if header:
+                            replace_in_paras(header.paragraphs)
+                            process_tables(header.tables)
                     for footer in [section.footer, section.first_page_footer, section.even_page_footer]:
-                        if footer: replace_in_paras(footer.paragraphs)
+                        if footer:
+                            replace_in_paras(footer.paragraphs)
+                            process_tables(footer.tables)
 
-            # 3. Apply Tier 1/2 Bold 24pt formatting to the company_name if present
+            # 4. Apply Tier 1/2 Bold 24pt formatting to the company_name if present
             if "Tier 1" in template_path or "Tier 2" in template_path or "政策" in template_path or "程序" in template_path:
                 from docx.shared import Pt
-                for para in doc.paragraphs:
+                for para in doc_obj.paragraphs:
                     if user_data.get("company_name", "") in para.text:
                         for run in para.runs:
                             if user_data.get("company_name", "") in run.text:
@@ -73,7 +103,8 @@ class DocumentGenerator:
                                 run.font.size = Pt(24)
                         break 
 
-            doc.save(output_path)
+            doc_obj.save(output_path)
+            # End of docx handling
             return True
         except Exception as e:
             print(f"Error processing {template_path}: {e}")

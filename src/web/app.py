@@ -253,6 +253,13 @@ def generate_all():
                             prefix = apply_prefix(match.group(1))
                             new_fname = fname.replace("IS", doc_prefix, 1) if fname.startswith("IS") else fname
 
+                            # Strip out inconsistent example naming artifacts and replace with a clean format
+                            # Match things like "範例", "(範例)", "（範例）", "_範例", " (範例) "
+                            new_fname = re.sub(r'[\(\（\_ ]*範例[\)\） ]*', '', new_fname)
+                            # Put a clean "(範本)" or just "_範例" depending on format - let's standardise to "-(範例)"
+                            name_part, ext_part = os.path.splitext(new_fname)
+                            new_fname = f"{name_part}-範例{ext_part}"
+
                             # Find which folder it belongs to
                             target_arcname = f"其他文件/範本_{new_fname}"
                             for k, fn in file_to_arcname.items():
