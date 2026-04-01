@@ -11,8 +11,16 @@ class ReadmeGenerator:
     """Generates a '導入指引手冊.docx' based on user data and document structure."""
 
     def __init__(self, structure_file):
-        with open(structure_file, 'r', encoding='utf-8') as f:
-            self.structure = json.load(f)
+        # Support encrypted structure file
+        enc_structure = structure_file + ".enc"
+        if os.path.exists(enc_structure):
+            from security import SecurityEngine
+            sec = SecurityEngine()
+            data = sec.decrypt_to_memory(enc_structure)
+            self.structure = json.load(data)
+        else:
+            with open(structure_file, 'r', encoding='utf-8') as f:
+                self.structure = json.load(f)
 
     def generate(self, user_data, output_dir, generated_files=None):
         """Create a landing readme .docx file.

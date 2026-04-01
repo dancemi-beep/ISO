@@ -5,21 +5,21 @@ import json
 class IntegrityChecker:
     """Validates document structure completeness and template file existence."""
 
-    def __init__(self, structure_file, template_dir):
+    def __init__(self, structure_data, template_dir):
         self.template_dir = template_dir
-
-        with open(structure_file, 'r', encoding='utf-8') as f:
-            self.structure = json.load(f)
+        self.structure = structure_data
 
     def check_template_files_exist(self):
-        """Check that every file in document_structure.json exists in the template dir."""
+        """Check that every file in document_structure.json exists in the template dir (or its .enc version)."""
         missing = []
         found = []
         for family_key, files in self.structure.items():
             for file_info in files:
                 filename = file_info['filename']
                 path = os.path.join(self.template_dir, filename)
-                if os.path.exists(path):
+                enc_path = path + ".enc"
+                
+                if os.path.exists(path) or os.path.exists(enc_path):
                     found.append(filename)
                 else:
                     missing.append(filename)
@@ -95,8 +95,10 @@ class IntegrityChecker:
 
 
 if __name__ == "__main__":
+    with open("document_structure.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
     checker = IntegrityChecker(
-        structure_file="document_structure.json",
+        structure_data=data,
         template_dir="files/marked"
     )
     results = checker.run_all_checks()

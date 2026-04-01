@@ -3,6 +3,9 @@ import json
 import shutil
 from docxtpl import DocxTemplate
 import openpyxl
+import io
+from security import SecurityEngine
+
 
 
 class DocumentGenerator:
@@ -10,9 +13,17 @@ class DocumentGenerator:
         self.template_dir = template_dir
         self.output_dir = output_dir
         self.structure_file = structure_file
+        self.security = SecurityEngine()
 
-        with open(self.structure_file, 'r', encoding='utf-8') as f:
-            self.structure = json.load(f)
+
+        # --- Support encrypted structure file ---
+        enc_structure = self.structure_file + ".enc"
+        if os.path.exists(enc_structure):
+            data = self.security.decrypt_to_memory(enc_structure)
+            self.structure = json.load(data)
+        else:
+            with open(self.structure_file, 'r', encoding='utf-8') as f:
+                self.structure = json.load(f)
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
@@ -20,10 +31,21 @@ class DocumentGenerator:
     def generate_document(self, template_path, output_path, variables, user_data):
         """Generate a single .docx document by replacing variables using docxtpl."""
         try:
-            doc = DocxTemplate(template_path)
+            # --- Know-how Protection: Check for encrypted version ---
+            encrypted_path = template_path + ".enc"
+            if os.path.exists(encrypted_path):
+                template_file = self.security.decrypt_to_memory(encrypted_path)
+                doc = DocxTemplate(template_file)
+            else:
+                doc = DocxTemplate(template_path)
+            
             context = dict(user_data)
             
-            doc_prefix = str(user_data.get("doc_prefix", "IS")).strip() or "IS"
+            doc_prefix = str(user_data.get("doc_prefix", "qpower")).strip()
+            if doc_prefix.endswith("-"):
+                doc_prefix = doc_prefix[:-1]
+            if not doc_prefix:
+                doc_prefix = "qpower"
             
             # Still provide [Missing: var] for any missing explicit variables
             for var in variables:
@@ -40,8 +62,8 @@ class DocumentGenerator:
             doc_obj = Document(output_path)
             
             # 3. Global Content Replacement (IS- -> PREFIX-)
-            if doc_prefix != "IS":
-                old_p = "IS-"
+            if doc_prefix != "qpower":
+                old_p = "qpower-"
                 new_p = f"{doc_prefix}-"
                 
                 # Helper to replace in paragraphs
@@ -113,10 +135,20 @@ class DocumentGenerator:
     def generate_excel(self, template_path, output_path, variables, user_data):
         """Generate a single .xlsx file by copying template and replacing cell values."""
         try:
-            shutil.copy2(template_path, output_path)
-            wb = openpyxl.load_workbook(output_path)
+            # --- Know-how Protection: Check for encrypted version ---
+            encrypted_path = template_path + ".enc"
+            if os.path.exists(encrypted_path):
+                template_file = self.security.decrypt_to_memory(encrypted_path)
+                wb = openpyxl.load_workbook(template_file)
+            else:
+                shutil.copy2(template_path, output_path)
+                wb = openpyxl.load_workbook(output_path)
             
-            doc_prefix = str(user_data.get("doc_prefix", "IS")).strip() or "IS"
+            doc_prefix = str(user_data.get("doc_prefix", "qpower")).strip()
+            if doc_prefix.endswith("-"):
+                doc_prefix = doc_prefix[:-1]
+            if not doc_prefix:
+                doc_prefix = "qpower"
 
             # Build replacement map from variables
             replacements = {}
@@ -133,19 +165,21 @@ class DocumentGenerator:
                         if cell.value and isinstance(cell.value, str):
                             new_val = cell.value
                             # Replacement A: Variable Tags
+                            import re
+                            # Replacement A: Variable Tags (Case-insensitive, allows space)
                             for var, val in replacements.items():
-                                new_val = new_val.replace("{{" + var + "}}", str(val))
-                                new_val = new_val.replace("{{ " + var + " }}", str(val))
+                                pattern = re.compile(r'\{\{\s*' + re.escape(var) + r'\s*\}\}', re.IGNORECASE)
+                                new_val = pattern.sub(str(val), new_val)
                             
                             # Replacement B: Global Prefix (IS- -> PREFIX-)
-                            if doc_prefix != "IS":
-                                new_val = new_val.replace("IS-", f"{doc_prefix}-")
+                            if doc_prefix != "qpower":
+                                new_val = new_val.replace("qpower-", f"{doc_prefix}-")
                                 
                             if new_val != cell.value:
                                 cell.value = new_val
 
-            # Special logic for IS-004-01 Asset & Risk Assessment
-            if "IS-004-01" in template_path:
+            # Special logic for qpower-004-01 Asset & Risk Assessment
+            if "qpower-004-01" in template_path or "IS-004-01" in template_path:
                 ws = wb.active
                 core_systems = user_data.get("core_systems", "")
                 if core_systems:
@@ -218,16 +252,20 @@ class DocumentGenerator:
         user_data["incident_report_clause"] = f"發現疑似資訊安全異常事件或事故時，本公司同仁與委外人員皆負有於{incident_time}即時通報之責任。"
 
         # 5. Log Retention (mapping select option to number)
-        user_data["log_retention_months"] = "6"
+        user_data["log_retention_months"] = str(user_data.get("log_retention_months", "6"))
 
-        doc_prefix = str(user_data.get("doc_prefix", "IS")).strip()
+        doc_prefix = str(user_data.get("doc_prefix", "qpower")).strip()
+        if doc_prefix.endswith("-"):
+            doc_prefix = doc_prefix[:-1]
         if not doc_prefix:
-            doc_prefix = "IS"
+            doc_prefix = "qpower"
             
         def apply_prefix(text):
             if not text: return text
             # Only replace the leading 'IS'
-            if text.startswith("IS"):
+            if text.startswith("qpower"):
+                return text.replace("qpower", doc_prefix, 1)
+            elif text.startswith("IS"):
                 return text.replace("IS", doc_prefix, 1)
             return text
 
@@ -244,13 +282,13 @@ class DocumentGenerator:
                 template_path = os.path.join(self.template_dir, original_filename)
                 output_path = os.path.join(self.output_dir, filename)
 
-                if not os.path.exists(template_path):
+                if not os.path.exists(template_path) and not os.path.exists(template_path + ".enc"):
                     print(f"Warning: Template not found for {original_filename}")
                     result["skipped"].append({"name": filename, "reason": "範本檔案不存在"})
                     continue
 
                 # --- Dynamic Exclusions based on Policies ---
-                if "IS-008-04" in original_filename and user_data.get("byod_policy") == "嚴格禁止自有設備處理公務":
+                if ("qpower-008-04" in original_filename or "IS-008-04" in original_filename) and user_data.get("byod_policy") == "嚴格禁止自有設備處理公務":
                     print(f"Skipping {filename} due to BYOD policy")
                     result["skipped"].append({"name": filename, "reason": "BYOD政策設定為嚴格禁止，無需此表單"})
                     continue

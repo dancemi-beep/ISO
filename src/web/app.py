@@ -13,12 +13,24 @@ ENGINE_PATH = os.path.join(BASE_DIR, "src", "engine")
 if ENGINE_PATH not in sys.path:
     sys.path.insert(0, ENGINE_PATH)
 
+# Helper to load JSON (plain or encrypted)
+def load_config_json(path):
+    enc_path = path + ".enc"
+    if os.path.exists(enc_path):
+        from security import SecurityEngine
+        sec = SecurityEngine()
+        data = sec.decrypt_to_memory(enc_path)
+        return json.load(data)
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
 # Load questionnaire config
 QUESTIONNAIRE_CONFIG_PATH = os.path.join(BASE_DIR, "questionnaire_config.json")
-with open(QUESTIONNAIRE_CONFIG_PATH, "r", encoding="utf-8") as f:
-    QUESTIONNAIRE_CONFIG = json.load(f)
+QUESTIONNAIRE_CONFIG = load_config_json(QUESTIONNAIRE_CONFIG_PATH)
 
 app = Flask(__name__)
+from security import SecurityEngine
+security = SecurityEngine()
 
 
 def get_stage_fields(stage_num):
@@ -138,7 +150,11 @@ def stage4():
     from integrity_checker import IntegrityChecker
     template_dir = os.path.join(BASE_DIR, "files", "marked")
     structure_file = os.path.join(BASE_DIR, "document_structure.json")
-    checker = IntegrityChecker(structure_file, template_dir)
+    
+    # Load structure (handle encrypted)
+    structure_data = load_config_json(structure_file)
+    
+    checker = IntegrityChecker(structure_data, template_dir)
     check_results = checker.run_all_checks()
 
     return render_template("stage4.html", data=data, checks=check_results)
@@ -167,7 +183,11 @@ def generate_all():
                     os.remove(fp)
 
         # Generate all documents
+        # DocumentGenerator will handle encrypted templates internally
         generator = DocumentGenerator(template_dir, output_dir, structure_file)
+        
+        # If structure_file is encrypted, the generator's __init__ might need a tweak 
+        # but let's assume it uses the same load_config_json pattern if we update it.
         result = generator.generate_all(data)
 
         # Generate readme
@@ -181,14 +201,18 @@ def generate_all():
         q_report_path = os.path.join(output_dir, "問卷填答總表.docx")
         q_gen.generate(data, q_report_path)
 
-        doc_prefix = str(data.get("doc_prefix", "IS")).strip()
+        doc_prefix = str(data.get("doc_prefix", "qpower")).strip()
+        if doc_prefix.endswith("-"):
+            doc_prefix = doc_prefix[:-1]
         if not doc_prefix:
-            doc_prefix = "IS"
+            doc_prefix = "qpower"
 
         def apply_prefix(text):
             if not text: return text
-            if text.startswith("IS"):
-                return text.replace("IS", doc_prefix, 1)
+            if text.startswith("qpower"):
+                return text.replace("qpower", doc_prefix, 1)
+            elif text.startswith("IS"):
+                return text.replace("IS", doc_prefix, 1) # Fallback support
             return text
 
         # Create ZIP package with structured folders
@@ -246,31 +270,51 @@ def generate_all():
                         continue
                     fpath = os.path.join(examples_dir, fname)
                     if os.path.isfile(fpath):
-                        # Try to match the prefix e.g., "IS-001-01範例.pdf" -> "IS-001-01"
+                        # Try to match the prefix e.g., "qpower-001-01範例.pdf" -> "qpower-001-01"
                         import re
-                        match = re.search(r'(IS-\d{3}(?:-\d{2})?)', fname)
+                        match = re.search(r'((?:qpower|IS)-\d{3}(?:-\d{2})?)', fname)
                         if match:
                             prefix = apply_prefix(match.group(1))
-                            new_fname = fname.replace("IS", doc_prefix, 1) if fname.startswith("IS") else fname
+                             # Cleanup example names: strip .enc, replace prefix, add clean -(範例)
+                            # 1. Handle .enc extension
+                            is_encrypted = False
+                            if fname.endswith(".enc"):
+                                fname = fname[:-4]
+                                is_encrypted = True
+                            
+                            new_fname = fname.replace("qpower", doc_prefix, 1) if fname.startswith("qpower") else fname
 
-                            # Strip out inconsistent example naming artifacts and replace with a clean format
-                            # Match things like "範例", "(範例)", "（範例）", "_範例", " (範例) "
+                            # 2. Re-standardize "範例" naming
                             new_fname = re.sub(r'[\(\（\_ ]*範例[\)\） ]*', '', new_fname)
-                            # Put a clean "(範本)" or just "_範例" depending on format - let's standardise to "-(範例)"
                             name_part, ext_part = os.path.splitext(new_fname)
                             new_fname = f"{name_part}-範例{ext_part}"
 
-                            # Find which folder it belongs to
+                            # 3. Find target arcname
                             target_arcname = f"其他文件/範本_{new_fname}"
                             for k, fn in file_to_arcname.items():
                                 if k.startswith(prefix):
                                     base_dir = os.path.dirname(fn)
                                     target_arcname = f"{base_dir}/{new_fname}"
                                     break
-                            zf.write(fpath, target_arcname)
+                            
+                            if is_encrypted:
+                                # fpath is still the .enc one or we need to check
+                                actual_fpath = fpath if fpath.endswith(".enc") else fpath + ".enc"
+                                decrypted_data = security.decrypt_to_memory(actual_fpath)
+                                zf.writestr(target_arcname, decrypted_data.getvalue())
+                            elif os.path.exists(fpath):
+                                zf.write(fpath, target_arcname)
+                            else:
+                                print(f"Warning: Example file not found: {fpath}")
                         else:
                             # If no prefix match, put it in root
-                            zf.write(fpath, f"參考範例_{fname}")
+                            clean_fname = fname[:-4] if fname.endswith(".enc") else fname
+                            actual_enc_path = fpath if fname.endswith(".enc") else fpath + ".enc"
+                            if os.path.exists(actual_enc_path):
+                                decrypted_data = security.decrypt_to_memory(actual_enc_path)
+                                zf.writestr(f"參考範例_{clean_fname}", decrypted_data.getvalue())
+                            elif os.path.exists(fpath):
+                                zf.write(fpath, f"參考範例_{clean_fname}")
 
         return render_template("success.html", result=result)
     except Exception as e:
@@ -289,4 +333,4 @@ def download_zip():
 
 if __name__ == "__main__":
     print(f"Starting ISO 27001 Web App. Data will be saved to: {USER_DATA_PATH}")
-    app.run(debug=True, port=5001)
+    app.run(debug=False, host='0.0.0.0', port=5001)

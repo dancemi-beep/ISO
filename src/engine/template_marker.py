@@ -14,27 +14,27 @@ from openpyxl.styles import Font, PatternFill, Alignment
 
 # Files that need the "user action required" notice
 OPERATIONAL_DOCX = [
-    "IS-002-02內部稽核查檢表.docx",
-    "IS-002-03矯正與預防處理單.docx",
-    "IS-002-08內部稽核報告.docx",
-    "IS-002-資訊安全管理程序.docx",
-    "IS-006-01帳號審查表.docx",
-    "IS-006-02資訊服務申請單.docx",
-    "IS-007-01資訊機房進出管制表.docx",
-    "IS-008-01備份管理作業表.docx",
-    "IS-011-01 供應商評鑑表.docx",
-    "IS-012-02資訊安全事故報告單.docx",
-    "IS-013-01業務流程營運衝擊分析表.docx",
-    "IS-013-02 營運持續計畫演練規劃暨處理報告單.docx",
-    "IS-016-01變更申請表.docx",
-    "IS-017-01雲端服務安全控制措施查檢表.docx",
+    "qpower-002-02內部稽核查檢表.docx",
+    "qpower-002-03矯正與預防處理單.docx",
+    "qpower-002-08內部稽核報告.docx",
+    "qpower-002-資訊安全管理程序.docx",
+    "qpower-006-01帳號審查表.docx",
+    "qpower-006-02資訊服務申請單.docx",
+    "qpower-007-01資訊機房進出管制表.docx",
+    "qpower-008-01備份管理作業表.docx",
+    "qpower-011-01 供應商評鑑表.docx",
+    "qpower-012-02資訊安全事故報告單.docx",
+    "qpower-013-01業務流程營運衝擊分析表.docx",
+    "qpower-013-02 營運持續計畫演練規劃暨處理報告單.docx",
+    "qpower-016-01變更申請表.docx",
+    "qpower-017-01雲端服務安全控制措施查檢表.docx",
     # Also tag the ones with residual XXX as reviewer name / record format
-    "IS-002-07內部稽核計畫.docx",
-    "IS-012-01威脅情資與監控活動管制表(範例).docx",
+    "qpower-002-07內部稽核計畫.docx",
+    "qpower-012-01威脅情資與監控活動管制表(範例).docx",
 ]
 
 OPERATIONAL_XLSX = [
-    "IS-004-01資產及風險評鑑表.xlsx",
+    "qpower-004-01資產及風險評鑑表.xlsx",
 ]
 
 NOTICE_TEXT = (

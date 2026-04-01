@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center py-12">
+    <!-- Hero Section -->
+    <div class="text-center max-w-4xl mb-12 animate-fade-in-up">
+        <div
+            class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-semibold text-sm mb-6">
+            <i class="fa-solid fa-award mr-2"></i> 諮力管理顧問有限公司 專屬自動化方案
+        </div>
+        <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl mb-6 leading-tight">
+            讓 <span class="text-indigo-600">ISO 27001</span> 導入<br />化繁為簡的自動化平台
+        </h1>
+        <div class="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-gray-100 shadow-sm mb-8">
+            <p class="text-xl text-indigo-900 font-medium mb-4">
+                「諮詢，為營運帶來資訊安全的力量，為營運創造信賴的合作」
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed text-justify md:text-center">
+                我們以「<span class="font-bold text-indigo-600">擺渡人</span>」的心態，協助台灣有資安意識的中小企業，在合理的預算下，將繁瑣的建置導入簡化，有效率的快速取得
+                ISO 27001 認證。諮力與驗證公司有極為良好的合作關係，為您提供無痛的一條龍稽核取證服務。
+            </p>
+        </div>
+
+        <!-- Security / Privacy Callout -->
+        <div
+            class="mb-8 p-4 rounded-xl bg-green-50/80 border-l-4 border-green-500 text-left shadow-sm flex items-start gap-4 mx-auto max-w-3xl">
+            <div class="text-green-600 mt-1">
+                <i class="fa-solid fa-shield-check fa-lg"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-green-900 mb-1">絕對的資料隱私保護 🔒</h4>
+                <p class="text-sm text-green-800 leading-relaxed">
+                    本系統涉及貴公司機敏資訊（如核心資產清單、風險評估與人員編制），因此系統設計採 <strong>100% 單機獨立執行
+                        (Localhost)</strong>。所有的運算與文件生成皆在您當下的電腦完成，<strong>絕不將任何隱私資料外流上傳至雲端</strong>，守護資安最高精神。
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="{{ url_for('stage1') }}"
+                class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transform transition hover:-translate-y-1">
+                開始自動化導入流程 <i class="fa-solid fa-arrow-right ml-2"></i>
+            </a>
+            <a href="mailto:imitatemi@gmail.com"
+                class="inline-flex items-center justify-center px-8 py-4 border-2 border-indigo-100 text-lg font-medium rounded-xl text-indigo-700 bg-white hover:bg-indigo-50 hover:border-indigo-200 shadow-sm transition">
+                <i class="fa-solid fa-envelope mr-2"></i> 聯絡資深顧問
+            </a>
+        </div>
+    </div>
+
+    <!-- Process Flow Overview -->
+    <div class="w-full max-w-4xl mt-8">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">導入四階段流程 (4-Stage Process)</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Stage 1 -->
+                <div
+                    class="relative p-5 border border-indigo-100 rounded-xl bg-indigo-50/50 hover:bg-indigo-50 transition cursor-default">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow">
+                        1</div>
+                    <div class="text-indigo-600 mb-3"><i class="fa-solid fa-building fa-2x"></i></div>
+                    <h3 class="font-bold text-gray-900 mb-2">起動與全景建構</h3>
+                    <p class="text-sm text-gray-600">填寫公司基本資料、驗證範圍與部門編制。</p>
+                </div>
+
+                <!-- Stage 2 -->
+                <div
+                    class="relative p-5 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 transition opacity-70">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center font-bold text-sm shadow">
+                        2</div>
+                    <div class="text-gray-400 mb-3"><i class="fa-solid fa-chart-pie fa-2x"></i></div>
+                    <h3 class="font-bold text-gray-900 mb-2">資產與風險評鑑</h3>
+                    <p class="text-sm text-gray-600">盤點資訊資產清單並計算風險評估矩陣。</p>
+                </div>
+
+                <!-- Stage 3 -->
+                <div
+                    class="relative p-5 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 transition opacity-70">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center font-bold text-sm shadow">
+                        3</div>
+                    <div class="text-gray-400 mb-3"><i class="fa-solid fa-list-check fa-2x"></i></div>
+                    <h3 class="font-bold text-gray-900 mb-2">管理程序與規定</h3>
+                    <p class="text-sm text-gray-600">建立存取控制、實體安全等二三階程序書。</p>
+                </div>
+
+                <!-- Stage 4 -->
+                <div
+                    class="relative p-5 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 transition opacity-70">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center font-bold text-sm shadow">
+                        4</div>
+                    <div class="text-gray-400 mb-3"><i class="fa-solid fa-file-export fa-2x"></i></div>
+                    <h3 class="font-bold text-gray-900 mb-2">體系檢查與產出</h3>
+                    <p class="text-sm text-gray-600">系統自動化鉤稽檢查並一鍵產出全部文件。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+</style>
+{% endblock %}

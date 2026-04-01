@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}四階段導入 - 階段二：{{ stage_title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Progress Indicator -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between relative">
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10"></div>
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-2/4 h-1 bg-indigo-600 -z-10"></div>
+            <div class="flex flex-col items-center">
+                <div
+                    class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md">
+                    <i class="fa-solid fa-check text-sm"></i></div>
+                <span class="text-xs font-semibold text-indigo-600 mt-2">啟動與全景</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div
+                    class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md">
+                    2</div>
+                <span class="text-xs font-semibold text-indigo-600 mt-2">風險評鑑</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div
+                    class="w-10 h-10 rounded-full bg-white border-2 border-gray-300 text-gray-500 flex items-center justify-center font-bold">
+                    3</div>
+                <span class="text-xs font-medium text-gray-500 mt-2">管理程序</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div
+                    class="w-10 h-10 rounded-full bg-white border-2 border-gray-300 text-gray-500 flex items-center justify-center font-bold">
+                    4</div>
+                <span class="text-xs font-medium text-gray-500 mt-2">體系檢查</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="bg-emerald-600 px-6 py-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i> 階段二：{{ stage_title }}
+            </h2>
+        </div>
+
+        <form id="stage2-form" class="p-6 sm:p-8" method="POST" action="{{ url_for('save_stage2') }}">
+            <p class="text-gray-600 mb-6">設定風險評鑑的基本參數。這些數值將套用至風險評鑑表 (IS-004) 與相關分析報告中。</p>
+
+            {% include "_stage_form.html" %}
+
+            <div class="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center">
+                <a href="{{ url_for('stage1') }}" class="text-gray-500 hover:text-gray-700 font-medium transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> 回階段一
+                </a>
+                <button type="submit"
+                    class="px-6 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300 flex items-center transition shadow">
+                    儲存並進入階段三 <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

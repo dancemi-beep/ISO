@@ -35,7 +35,7 @@ source "$VENV_DIR/bin/activate"
 pip install -q -r "$SCRIPT_DIR/requirements.txt" 2>/dev/null
 
 echo "🚀 啟動伺服器中..."
-echo "📎 開啟瀏覽器前往 → http://localhost:5000"
+echo "📎 開啟瀏覽器前往 → http://localhost:5001"
 echo "📎 按 Ctrl+C 可停止伺服器"
 echo ""
 
