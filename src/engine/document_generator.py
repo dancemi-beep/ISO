@@ -47,10 +47,23 @@ class DocumentGenerator:
             if not doc_prefix:
                 doc_prefix = "qpower"
             
+            from docxtpl import RichText
+            
+            # Known logic keys or keys that shouldn't be highlighted as red (like version/dates if not explicitly requested, though letting them be highlighted is fine too, but let's avoid breaking logic)
+            logic_keys = {"byod_policy", "remote_access_policy", "incident_report_time", "core_systems", "doc_prefix"}
+
             # Still provide [Missing: var] for any missing explicit variables
             for var in variables:
                 if var not in context or not str(context[var]).strip():
                     context[var] = f"[Missing: {var}]"
+
+            # No longer using RichText as it causes strict OOXML w:rPr schema corruption in complex Word templates.
+            # Instead, we will do a targeted run.font.color.rgb = Red pass using python-docx after saving.
+            for k, v in list(context.items()):
+                if k not in logic_keys:
+                    s_val = str(v).strip()
+                    if s_val and not s_val.startswith("[Missing:"):
+                        context[k] = s_val
             
             # 1. Render Jinja tags and SAVE first. 
             # DocxTemplate will overwrite header text modifications if we do it in memory before saving.
@@ -61,37 +74,59 @@ class DocumentGenerator:
             from docx import Document
             doc_obj = Document(output_path)
             
-            # 3. Global Content Replacement (IS- -> PREFIX-)
+            # 3. Global Content Replacement & Styling
+            from docx.shared import Pt, RGBColor
+            red_color = RGBColor(255, 0, 0)
+            
+            dynamic_values = [str(v).strip() for k, v in context.items() if k not in logic_keys and str(v).strip() and not str(v).startswith("[Missing:")]
+            
             if doc_prefix != "qpower":
                 old_p = "qpower-"
                 new_p = f"{doc_prefix}-"
+            else:
+                old_p = "NEVER_MATCH_THIS_STRING"
+                new_p = "NEVER_MATCH_THIS_STRING"
                 
-                # Helper to replace in paragraphs
-                def replace_in_paras(paras):
-                    for para in paras:
-                        if old_p in para.text:
+            # Helper to replace in paragraphs
+            def replace_in_paras(paras):
+                for para in paras:
+                    # A. Replace "XX有限公司" (hardcoded legacy texts in some forms)
+                    target_company = user_data.get("company_name", "")
+                    if target_company and "XX有限公司" in para.text:
+                        replaced_xx = False
+                        for run in para.runs:
+                            if "XX有限公司" in run.text:
+                                run.text = run.text.replace("XX有限公司", target_company)
+                                run.font.color.rgb = red_color
+                                replaced_xx = True
+                        if not replaced_xx and "XX有限公司" in para.text:
+                            para.text = para.text.replace("XX有限公司", target_company)
+                    
+                    # B. Apply Red color to dynamically injected questionnaire answers
+                    for val in dynamic_values:
+                        if val in para.text:
+                            for run in para.runs:
+                                if val in run.text:
+                                    run.font.color.rgb = red_color
+
+                    # C. Replace qpower- prefix
+                    if old_p in para.text:
                             replaced = False
-                            # 1. Try to replace within single runs to preserve formatting
                             for run in para.runs:
                                 if old_p in run.text:
                                     run.text = run.text.replace(old_p, new_p)
                                     replaced = True
                             
-                            # 2. Try to handle the most common split: "IS" and "-"
                             if not replaced:
                                 for i in range(len(para.runs) - 1):
-                                    if para.runs[i].text.endswith("IS") and para.runs[i+1].text.startswith("-"):
-                                        para.runs[i].text = para.runs[i].text[:-2] + new_p
-                                        # When fixing split runs like "IS" | "-0", keeping it clean ensures we just drop the "-" and keep the rest
+                                    if para.runs[i].text.endswith("qpower") and para.runs[i+1].text.startswith("-"):
+                                        para.runs[i].text = para.runs[i].text[:-6] + new_p
                                         para.runs[i+1].text = para.runs[i+1].text[1:]
                                         replaced = True
                                         break
                                         
-                            # 3. Fallback: replace the whole paragraph text if it's still fragmented.
-                            # This loses run-level formatting but ensures the critical prefix is modified.
                             if not replaced and old_p in para.text:
-                                text_copy = para.text
-                                para.text = text_copy.replace(old_p, new_p)
+                                para.text = para.text.replace(old_p, new_p)
 
                 replace_in_paras(doc_obj.paragraphs)
                 
@@ -114,16 +149,17 @@ class DocumentGenerator:
                             replace_in_paras(footer.paragraphs)
                             process_tables(footer.tables)
 
-            # 4. Apply Tier 1/2 Bold 24pt formatting to the company_name if present
+            # 4. Apply Cover Page 24pt sizing for company_name on Tier 1/2 policy documents
             if "Tier 1" in template_path or "Tier 2" in template_path or "政策" in template_path or "程序" in template_path:
-                from docx.shared import Pt
-                for para in doc_obj.paragraphs:
-                    if user_data.get("company_name", "") in para.text:
-                        for run in para.runs:
-                            if user_data.get("company_name", "") in run.text:
-                                run.font.bold = True
-                                run.font.size = Pt(24)
-                        break 
+                try:
+                    for para in doc_obj.paragraphs:
+                        if user_data.get("company_name", "") in para.text:
+                            for run in para.runs:
+                                if user_data.get("company_name", "") in run.text:
+                                    run.font.size = Pt(24)
+                            break # Only apply to the first occurrence (Cover Page)
+                except Exception as ex:
+                    print(f"Failed to set cover page font size: {ex}")
 
             doc_obj.save(output_path)
             # End of docx handling
@@ -164,19 +200,28 @@ class DocumentGenerator:
                     for cell in row:
                         if cell.value and isinstance(cell.value, str):
                             new_val = cell.value
+                            cell_modified = False
                             # Replacement A: Variable Tags
                             import re
                             # Replacement A: Variable Tags (Case-insensitive, allows space)
                             for var, val in replacements.items():
                                 pattern = re.compile(r'\{\{\s*' + re.escape(var) + r'\s*\}\}', re.IGNORECASE)
-                                new_val = pattern.sub(str(val), new_val)
+                                if pattern.search(new_val):
+                                    new_val = pattern.sub(str(val), new_val)
+                                    cell_modified = True
                             
-                            # Replacement B: Global Prefix (IS- -> PREFIX-)
+                            # Replacement B: Global Prefix (qpower- -> PREFIX-)
                             if doc_prefix != "qpower":
                                 new_val = new_val.replace("qpower-", f"{doc_prefix}-")
                                 
                             if new_val != cell.value:
                                 cell.value = new_val
+                                if cell_modified:
+                                    from openpyxl.styles import PatternFill, Font
+                                    cell.fill = PatternFill(start_color="FF0000", end_color="FF0000", fill_type="solid")
+                                    # Also make text white for readability on red background if needed, but let's stick to standard highlight:
+                                    # Actually, red background might make black text hard to read, we can add white text
+                                    cell.font = Font(color="FFFFFF", bold=True)
 
             # Special logic for qpower-004-01 Asset & Risk Assessment
             if "qpower-004-01" in template_path or "IS-004-01" in template_path:
